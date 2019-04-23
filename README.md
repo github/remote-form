@@ -1,6 +1,10 @@
 # remote-form
 
-A function that will enable submitting it over AJAX.
+A function that will enable submitting forms over AJAX.
+
+The function will make a request based on the form using `window.fetch` with the payload encoded as URL parameters if the form method is a `GET` and `FormData` for all the other methods.
+
+The user can access the request object in the callback so they can add headers or modifying the request in other ways before a network call is initialized.
 
 ## Installation
 
