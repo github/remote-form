@@ -71,12 +71,6 @@ let selectorSet: ?SelectorSet<CallbackFormat>
 const afterHandlers = []
 const beforeHandlers = []
 
-const htmlPostprocesses = []
-
-export function htmlPostprocess(fn: (res: Response) => void) {
-  htmlPostprocesses.push(fn)
-}
-
 export function afterRemote(fn: (form: HTMLFormElement) => mixed) {
   afterHandlers.push(fn)
 }
@@ -223,12 +217,6 @@ async function remoteSubmit(req): Promise<SimpleResponse> {
       // eslint-disable-next-line no-shadow
       const response: SimpleResponse = this
       delete response.html
-
-      for (const handler of htmlPostprocesses) {
-        // eslint-disable-next-line flowtype/no-flow-fix-me-comments
-        // $FlowFixMe
-        handler(response)
-      }
 
       response.html = parseHTML(document, response.text)
       return response.html
