@@ -53,10 +53,15 @@ remoteForm('form[data-remote]', async function(form, wants, request) {
 
 ## Browser support
 
+Browsers without native [custom element support][support] require a [polyfill][].
+
 - Chrome
 - Firefox
 - Safari
 - Microsoft Edge
+
+[support]: https://caniuse.com/#feat=custom-elementsv1
+[polyfill]: https://github.com/webcomponents/custom-elements
 
 ## Development
 
