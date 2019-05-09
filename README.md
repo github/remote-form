@@ -40,7 +40,7 @@ remoteForm('form[data-remote]', async function(form, wants, request) {
 ```
 
 ```html
-<form action="/signup" method="post">
+<form action="/signup" method="post" data-remote>
   <label for="username">Username</label>
   <input id="username" type="text" />
 
