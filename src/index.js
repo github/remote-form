@@ -226,7 +226,7 @@ async function remoteSubmit(req): Promise<SimpleResponse> {
   const body = await response.text()
   res.text = body
 
-  if (res.status < 300) {
+  if (response.ok) {
     return res
   } else {
     throw new ErrorWithResponse('request failed', res)
