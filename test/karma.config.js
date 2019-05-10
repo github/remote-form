@@ -27,7 +27,12 @@ function checker(request, response, next) {
 module.exports = function(config) {
   config.set({
     frameworks: ['mocha', 'chai'],
-    files: ['../dist/index.umd.js', 'test.js'],
+    files: [
+      '../node_modules/form-data-entries/index.umd.js',
+      '../node_modules/selector-set/selector-set.js',
+      '../dist/index.umd.js',
+      'test.js'
+    ],
     reporters: ['mocha'],
     port: 9876,
     colors: true,
