@@ -1,7 +1,6 @@
 function checker(request, response, next) {
   if (request.method === 'POST' && request.url === '/ok') {
     response.setHeader('content-type', 'text/html')
-    response.setHeader('x-html-safe', 'NOT_EVEN_NONCE')
     response.writeHead(200)
     // eslint-disable-next-line github/unescaped-html-literal
     response.end('<b>Hello</b> world!')
