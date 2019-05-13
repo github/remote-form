@@ -1,0 +1,24 @@
+{
+  "extends": [
+    "plugin:github/es6",
+    "plugin:github/browser",
+    "plugin:github/flow"
+  ],
+  "overrides": [
+    {
+      "files": "test/**/*.js",
+      "rules": {
+        "flowtype/require-valid-file-annotation": "off",
+        "github/unescaped-html-literal": "off",
+        "eslint-comments/no-use": "off"
+      },
+      "env": {
+        "mocha": true
+      },
+      "globals": {
+        "assert": true,
+        "remoteForm": true
+      }
+    }
+  ]
+}
