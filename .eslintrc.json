@@ -6,7 +6,7 @@
   ],
   "overrides": [
     {
-      "files": "test/*.js",
+      "files": "test/**/*.js",
       "rules": {
         "flowtype/require-valid-file-annotation": "off",
         "github/unescaped-html-literal": "off",
@@ -16,6 +16,7 @@
         "mocha": true
       },
       "globals": {
+        "assert": true,
         "remoteForm": true
       }
     }

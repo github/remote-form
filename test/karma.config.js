@@ -2,7 +2,6 @@ function checker(request, response, next) {
   if (request.method === 'POST' && request.url === '/ok') {
     response.setHeader('content-type', 'text/html')
     response.writeHead(200)
-    // eslint-disable-next-line github/unescaped-html-literal
     response.end('<b>Hello</b> world!')
     return
   } else if (request.method === 'POST' && request.url === '/server-error') {
@@ -11,12 +10,10 @@ function checker(request, response, next) {
     return
   } else if (request.method === 'GET' && request.url === '/ok?query=hello') {
     response.writeHead(200)
-    // eslint-disable-next-line github/unescaped-html-literal
     response.end('<b>Hello</b> world!')
     return
   } else if (request.method === 'GET' && request.url === '/ok?a=b&query=hello') {
     response.writeHead(200)
-    // eslint-disable-next-line github/unescaped-html-literal
     response.end('<b>Hello</b> world!')
     return
   }
