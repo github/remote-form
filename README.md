@@ -42,12 +42,13 @@ remoteForm('form[data-remote]', async function(form, wants, request) {
 ```html
 <form action="/signup" method="post" data-remote>
   <label for="username">Username</label>
-  <input id="username" type="text" />
+  <input id="username" type="text">
 
   <label for="password">Username</label>
-  <input id="password" type="password" />
+  <input id="password" type="password">
 
-  <button>Log in</button>
+  <button type="submit">Log in</button>
+  <div class="results"></div>
 </form>
 ```
 
