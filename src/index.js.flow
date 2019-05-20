@@ -16,10 +16,10 @@ declare module '@github/remote-form' {
     json: {[string]: any},
     html: DocumentFragment
   }
-  declare export type CallbackFormat = (form: HTMLFormElement, kicker: Kicker, req: SimpleRequest) => void | Promise<void>;
+  declare export type RemoteFormHandler = (form: HTMLFormElement, kicker: Kicker, req: SimpleRequest) => void | Promise<void>;
 
   declare export function afterRemote(fn: (form: HTMLFormElement) => mixed): void;
   declare export function beforeRemote(fn: (form: HTMLFormElement) => mixed): void;
-  declare export function remoteForm(selector: string, fn: CallbackFormat): void;
-  declare export function remoteUninstall(selector: string, fn: CallbackFormat): void;
+  declare export function remoteForm(selector: string, fn: RemoteFormHandler): void;
+  declare export function remoteUninstall(selector: string, fn: RemoteFormHandler): void;
 }

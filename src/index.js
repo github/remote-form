@@ -64,9 +64,9 @@ type Kicker = {
   html: () => Promise<SimpleResponse>
 }
 
-export type CallbackFormat = (form: HTMLFormElement, kicker: Kicker, req: SimpleRequest) => void | Promise<void>
+export type RemoteFormHandler = (form: HTMLFormElement, kicker: Kicker, req: SimpleRequest) => void | Promise<void>
 
-let selectorSet: ?SelectorSet<CallbackFormat>
+let selectorSet: ?SelectorSet<RemoteFormHandler>
 
 const afterHandlers = []
 const beforeHandlers = []
@@ -79,7 +79,7 @@ export function beforeRemote(fn: (form: HTMLFormElement) => mixed) {
   beforeHandlers.push(fn)
 }
 
-export function remoteForm(selector: string, fn: CallbackFormat) {
+export function remoteForm(selector: string, fn: RemoteFormHandler) {
   if (!selectorSet) {
     selectorSet = new SelectorSet()
     document.addEventListener('submit', handleSubmit)
@@ -87,7 +87,7 @@ export function remoteForm(selector: string, fn: CallbackFormat) {
   selectorSet.add(selector, fn)
 }
 
-export function remoteUninstall(selector: string, fn: CallbackFormat) {
+export function remoteUninstall(selector: string, fn: RemoteFormHandler) {
   if (selectorSet) {
     selectorSet.remove(selector, fn)
   }
