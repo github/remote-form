@@ -1,0 +1,25 @@
+/* flow strict */
+
+declare module '@github/remote-form' {
+  declare type Kicker = {
+    text: () => Promise<SimpleResponse>,
+    json: () => Promise<SimpleResponse>,
+    html: () => Promise<SimpleResponse>
+  }
+
+  declare export type SimpleResponse = {
+    url: string,
+    status: number,
+    statusText: ?string,
+    headers: Headers,
+    text: string,
+    json: {[string]: any},
+    html: DocumentFragment
+  }
+  declare export type CallbackFormat = (form: HTMLFormElement, kicker: Kicker, req: SimpleRequest) => void | Promise<void>;
+
+  declare export function afterRemote(fn: (form: HTMLFormElement) => mixed): void;
+  declare export function beforeRemote(fn: (form: HTMLFormElement) => mixed): void;
+  declare export function remoteForm(selector: string, fn: CallbackFormat): void;
+  declare export function remoteUninstall(selector: string, fn: CallbackFormat): void;
+}
