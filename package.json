@@ -1,6 +1,6 @@
 {
   "name": "@github/remote-form",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "Decorator that will submit a form over AJAX",
   "repository": "github/remote-form",
   "files": [
@@ -24,7 +24,9 @@
     "remote-form",
     "form"
   ],
-  "eslintIgnore": ["dist/"],
+  "eslintIgnore": [
+    "dist/"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.1.5",
