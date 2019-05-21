@@ -7,6 +7,13 @@ declare module '@github/remote-form' {
     html: () => Promise<SimpleResponse>
   }
 
+  declare type SimpleRequest = {
+    method: string,
+    url: string,
+    body: ?FormData,
+    headers: Headers
+  }
+
   declare export type SimpleResponse = {
     url: string,
     status: number,
