@@ -1,20 +1,20 @@
 /* @flow strict */
 
 declare module '@github/remote-form' {
-  declare type Kicker = {
+  type Kicker = {
     text: () => Promise<SimpleResponse>,
     json: () => Promise<SimpleResponse>,
     html: () => Promise<SimpleResponse>
   }
 
-  declare type SimpleRequest = {
+  type SimpleRequest = {
     method: string,
     url: string,
     body: ?FormData,
     headers: Headers
   }
 
-  declare export type SimpleResponse = {
+  export type SimpleResponse = {
     url: string,
     status: number,
     statusText: ?string,
@@ -23,7 +23,7 @@ declare module '@github/remote-form' {
     json: {[string]: any},
     html: DocumentFragment
   }
-  declare export type RemoteFormHandler = (form: HTMLFormElement, kicker: Kicker, req: SimpleRequest) => void | Promise<void>;
+  export type RemoteFormHandler = (form: HTMLFormElement, kicker: Kicker, req: SimpleRequest) => void | Promise<void>;
 
   declare export function afterRemote(fn: (form: HTMLFormElement) => mixed): void;
   declare export function beforeRemote(fn: (form: HTMLFormElement) => mixed): void;
