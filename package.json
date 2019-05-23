@@ -1,6 +1,6 @@
 {
   "name": "@github/remote-form",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Decorator that will submit a form over AJAX",
   "repository": "github/remote-form",
   "files": [
