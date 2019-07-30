@@ -7,7 +7,7 @@ type Kicker = {
 type SimpleRequest = {
   method: string,
   url: string,
-  body?: FormData,
+  body: FormData | undefined | null,
   headers: Headers
 }
 
