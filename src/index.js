@@ -50,7 +50,7 @@ type SimpleRequest = {
 export type SimpleResponse = {
   url: string,
   status: number,
-  statusText: ?string,
+  statusText: string,
   headers: Headers,
   text: string,
   // eslint-disable-next-line flowtype/no-weak-types
