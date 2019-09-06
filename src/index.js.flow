@@ -24,7 +24,7 @@ export type SimpleResponse = {
 }
 export type RemoteFormHandler = (form: HTMLFormElement, kicker: Kicker, req: SimpleRequest) => void | Promise<void>;
 
-declare export function afterRemote(fn: (form: HTMLFormElement) => void): void;
-declare export function beforeRemote(fn: (form: HTMLFormElement) => void): void;
+declare export function afterRemote(fn: (form: HTMLFormElement) => void | Promise<void>): void;
+declare export function beforeRemote(fn: (form: HTMLFormElement) => void | Promise<void>): void;
 declare export function remoteForm(selector: string, fn: RemoteFormHandler): void;
 declare export function remoteUninstall(selector: string, fn: RemoteFormHandler): void;
