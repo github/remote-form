@@ -10,10 +10,14 @@ function parseHTML(document: Document, html: string): DocumentFragment {
   return document.importNode(template.content, true)
 }
 
-function serialize(form: HTMLFormElement): string {
+function serialize(form: HTMLFormElement, submitter): string {
   const params = new URLSearchParams()
-  for (const [name, value] of formDataEntries(form)) {
-    params.append(name, value)
+  const entries = 'entries' in FormData.prototype ? new FormData(form).entries() : formDataEntries(form)
+  for (const [name, value] of [...entries]) {
+    params.append(name, value.toString())
+  }
+  if (submitter && submitter.name) {
+    params.append(submitter.name, submitter.value)
   }
   return params.toString()
 }
@@ -103,7 +107,7 @@ function handleSubmit(event: Event) {
     return
   }
 
-  const req = buildRequest(form)
+  const req = buildRequest(form, event.submitter)
   const [kickerPromise, ultimateResolve, ultimateReject] = makeDeferred()
 
   event.preventDefault()
@@ -171,7 +175,7 @@ async function processHandlers(
   return kickerWasCalled
 }
 
-function buildRequest(form: HTMLFormElement): SimpleRequest {
+function buildRequest(form: HTMLFormElement, submitter: HTMLInputElement | HTMLButtonElement | null): SimpleRequest {
   const req: SimpleRequest = {
     method: form.method || 'GET',
     url: form.action,
@@ -180,7 +184,7 @@ function buildRequest(form: HTMLFormElement): SimpleRequest {
   }
 
   if (req.method.toUpperCase() === 'GET') {
-    const data = serialize(form)
+    const data = serialize(form, submitter)
     if (data) {
       req.url += (~req.url.indexOf('?') ? '&' : '?') + data
     }
