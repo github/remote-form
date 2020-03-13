@@ -12,8 +12,9 @@ function parseHTML(document: Document, html: string): DocumentFragment {
 
 function serialize(form: HTMLFormElement): string {
   const params = new URLSearchParams()
-  for (const [name, value] of formDataEntries(form)) {
-    params.append(name, value)
+  const entries = 'entries' in FormData.prototype ? new FormData(form).entries() : formDataEntries(form)
+  for (const [name, value] of [...entries]) {
+    params.append(name, value.toString())
   }
   return params.toString()
 }
