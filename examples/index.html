@@ -2,33 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <script src="https://unpkg.com/selector-set@latest"></script>
+  <script src="https://unpkg.com/form-data-entries@latest"></script>
   <script src="https://unpkg.com/@github/remote-form@latest/dist/index.umd.js"></script>
   <!-- <script src="../dist/index.umd.js"></script> -->
   <title>remote-form demo</title>
 </head>
 <body>
-  <form>
-    <label for="username">Username</label>
-    <input id="username" name="username" />
+  <form action="https://httpbin.org/get">
+    <label for="username" value="name">Username</label>
+    <input id="username" name="username" type="text" required autofocus>
 
     <button>Submit</button>
   </form>
 
-  <div id="results"></div>
+  Request payload from httpbin.org:
+  <pre id="results" aria-live="assertive">Empty</pre>
 
   <script>
     const input = document.querySelector('input')
-    function fakeFetch() {
-      return new Promise(fetchResolve => {
-        fetchResolve({
-          status: 200,
-          text: () => new Promise(
-            textResolve => textResolve(input.value.toUpperCase())
-          )
-        })
-      })
-    }
-    window.fetch = fakeFetch
 
     remoteForm.remoteForm('form', async (form, wants) => {
       const response = await wants.text()
