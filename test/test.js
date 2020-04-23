@@ -1,9 +1,9 @@
 const {remoteForm: _remoteForm, remoteUninstall} = window.remoteForm
 
-describe('remoteForm', function() {
+describe('remoteForm', function () {
   let htmlForm
 
-  beforeEach(function() {
+  beforeEach(function () {
     document.body.innerHTML = `
       <form action="/ok" class="my-remote-form remote-widget" method="post" target="submit-fallback">
         <input name="query" value="hello">
@@ -24,15 +24,15 @@ describe('remoteForm', function() {
     _remoteForm(selector, fn)
   }
 
-  afterEach(function() {
+  afterEach(function () {
     for (const [selector, fn] of installed) {
       remoteUninstall(selector, fn)
     }
     installed.length = 0
   })
 
-  it('submits the form with fetch', function(done) {
-    remoteForm('.my-remote-form', async function(form, wants, req) {
+  it('submits the form with fetch', function (done) {
+    remoteForm('.my-remote-form', async function (form, wants, req) {
       assert.ok(req.url.endsWith('/ok'))
       assert.instanceOf(req.body, FormData)
 
@@ -45,10 +45,10 @@ describe('remoteForm', function() {
     document.querySelector('button[type=submit]').click()
   })
 
-  it('server failure scenario', function(done) {
+  it('server failure scenario', function (done) {
     htmlForm.action = 'server-error'
 
-    remoteForm('.my-remote-form', async function(form, wants) {
+    remoteForm('.my-remote-form', async function (form, wants) {
       try {
         await wants.html()
         assert.ok(false, 'should not resolve')
@@ -62,14 +62,14 @@ describe('remoteForm', function() {
     document.querySelector('button[type=submit]').click()
   })
 
-  it('chained handlers', function(done) {
+  it('chained handlers', function (done) {
     let previousCallbackCalled = false
-    remoteForm('.remote-widget', async function() {
+    remoteForm('.remote-widget', async function () {
       await new Promise(resolve => setTimeout(resolve, 10))
       previousCallbackCalled = true
     })
 
-    remoteForm('.my-remote-form', async function() {
+    remoteForm('.my-remote-form', async function () {
       if (previousCallbackCalled) {
         done()
       } else {
@@ -80,12 +80,12 @@ describe('remoteForm', function() {
     document.querySelector('button[type=submit]').click()
   })
 
-  it('exception in js handlers results in form submitting normally', async function() {
-    remoteForm('.remote-widget', function() {
+  it('exception in js handlers results in form submitting normally', async function () {
+    remoteForm('.remote-widget', function () {
       throw new Error('ignore me')
     })
 
-    remoteForm('.my-remote-form', async function(form, wants) {
+    remoteForm('.my-remote-form', async function (form, wants) {
       try {
         await wants.text()
         assert.ok(false, 'should never happen')
@@ -111,8 +111,8 @@ describe('remoteForm', function() {
     assert.match(iframe.contentWindow.location.href, /\/ok$/)
   })
 
-  it('GET form serializes data to URL', function(done) {
-    remoteForm('.my-remote-form', async function(form, wants, req) {
+  it('GET form serializes data to URL', function (done) {
+    remoteForm('.my-remote-form', async function (form, wants, req) {
       assert.isNull(req.body)
       await wants.html()
       done()
@@ -123,8 +123,8 @@ describe('remoteForm', function() {
     button.click()
   })
 
-  it('GET form serializes data to URL with existing query', function(done) {
-    remoteForm('.my-remote-form', async function(form, wants) {
+  it('GET form serializes data to URL with existing query', function (done) {
+    remoteForm('.my-remote-form', async function (form, wants) {
       await wants.html()
       done()
     })

@@ -20,7 +20,7 @@ function checker(request, response, next) {
   next()
 }
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
     frameworks: ['mocha', 'chai'],
     files: [
