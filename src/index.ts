@@ -163,7 +163,7 @@ async function processHandlers(
       html: () => {
         req.headers.set('Accept', 'text/html')
         return kick()
-      },
+      }
     }
     await Promise.race([kickerCalled, match.data.call(null, form, kicker, req)])
   }
@@ -175,7 +175,7 @@ function buildRequest(form: HTMLFormElement): SimpleRequest {
     method: form.method || 'GET',
     url: form.action,
     headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
-    body: null,
+    body: null
   }
 
   if (req.method.toUpperCase() === 'GET') {
@@ -195,7 +195,7 @@ async function remoteSubmit(req: SimpleRequest): Promise<SimpleResponse> {
     method: req.method,
     body: req.body !== null ? req.body : undefined,
     headers: req.headers,
-    credentials: 'same-origin',
+    credentials: 'same-origin'
   })
 
   const res: SimpleResponse = {
@@ -219,7 +219,7 @@ async function remoteSubmit(req: SimpleRequest): Promise<SimpleResponse> {
 
       response.html = parseHTML(document, response.text)
       return response.html
-    },
+    }
   }
 
   const body = await response.text()
