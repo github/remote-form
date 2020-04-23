@@ -4,19 +4,16 @@
   "description": "Decorator that will submit a form over AJAX",
   "repository": "github/remote-form",
   "files": [
-    "dist",
-    "index.d.ts"
+    "dist"
   ],
-  "main": "dist/index.umd.js",
-  "module": "dist/index.esm.js",
-  "types:": "index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types:": "dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf dist",
     "lint": "github-lint",
     "prebuild": "npm run clean && npm run lint && mkdir dist",
-    "build-umd": "BABEL_ENV=umd babel src/index.js -o dist/index.umd.js",
-    "build-esm": "BABEL_ENV=esm babel src/index.js -o dist/index.esm.js",
-    "build": "npm run build-umd && npm run build-esm && cp src/index.js.flow dist/index.umd.js.flow && cp src/index.js.flow dist/index.esm.js.flow",
+    "build": "tsc",
     "pretest": "npm run build",
     "test": "karma start test/karma.config.js",
     "prepublishOnly": "npm run build",
@@ -32,11 +29,6 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.7.0",
-    "@babel/core": "^7.7.0",
-    "@babel/plugin-transform-modules-commonjs": "^7.7.0",
-    "@babel/plugin-transform-modules-umd": "^7.7.0",
-    "babel-preset-github": "^3.2.1",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "eslint-plugin-github": "^3.4.1",
@@ -45,7 +37,8 @@
     "karma-chrome-launcher": "^3.1.0",
     "karma-mocha": "^2.0.0",
     "karma-mocha-reporter": "^2.2.5",
-    "mocha": "^7.1.1"
+    "mocha": "^7.1.1",
+    "typescript": "^3.8.3"
   },
   "dependencies": {
     "form-data-entries": "^1.0.4",
