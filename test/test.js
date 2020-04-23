@@ -98,7 +98,8 @@ describe('remoteForm', function () {
       event.preventDefault()
     }
     const originalMochaError = window.onerror
-    window.onerror = function() {}
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    window.onerror = function () {}
     window.addEventListener('error', errorHandler)
 
     document.querySelector('button[type=submit]').click()
