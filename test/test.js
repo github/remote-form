@@ -1,4 +1,4 @@
-const {remoteForm: _remoteForm, remoteUninstall} = window.remoteForm
+import {remoteForm as _remoteForm, remoteUninstall} from '../dist/index.esm.js'
 
 describe('remoteForm', function() {
   let htmlForm

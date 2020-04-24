@@ -22,11 +22,9 @@ function checker(request, response, next) {
 
 module.exports = function(config) {
   config.set({
+    basePath: '..',
     frameworks: ['mocha', 'chai'],
-    files: [
-      '../dist/index.umd.js',
-      'test.js'
-    ],
+    files: [{pattern: 'dist/index.esm.js', type: 'module'}, {pattern: 'test/test.js', type: 'module'}],
     reporters: ['mocha'],
     port: 9876,
     colors: true,
