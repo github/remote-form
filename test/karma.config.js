@@ -24,8 +24,6 @@ module.exports = function(config) {
   config.set({
     frameworks: ['mocha', 'chai'],
     files: [
-      '../node_modules/form-data-entries/index.umd.js',
-      '../node_modules/selector-set/selector-set.js',
       '../dist/index.umd.js',
       'test.js'
     ],
