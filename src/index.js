@@ -1,7 +1,6 @@
 /* @flow strict */
 
 import SelectorSet from 'selector-set'
-import formDataEntries from 'form-data-entries'
 
 // Parse HTML text into document fragment.
 function parseHTML(document: Document, html: string): DocumentFragment {
@@ -12,7 +11,7 @@ function parseHTML(document: Document, html: string): DocumentFragment {
 
 function serialize(form: HTMLFormElement): string {
   const params = new URLSearchParams()
-  const entries = 'entries' in FormData.prototype ? new FormData(form).entries() : formDataEntries(form)
+  const entries = new FormData(form).entries()
   for (const [name, value] of [...entries]) {
     params.append(name, value.toString())
   }
