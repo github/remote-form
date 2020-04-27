@@ -1,5 +1,3 @@
-/* @flow strict */
-
 // Parse HTML text into document fragment.
 function parseHTML(document: Document, html: string): DocumentFragment {
   const template = document.createElement('template')
@@ -19,61 +17,59 @@ function serialize(form: HTMLFormElement): string {
 class ErrorWithResponse extends Error {
   response: SimpleResponse
 
-  constructor(message, response) {
+  constructor(message: string, response: SimpleResponse) {
     super(message)
     this.response = response
   }
 }
 
-function makeDeferred<T>(): [Promise<T>, () => T, () => T] {
-  let resolve
-  let reject
-  const promise = new Promise(function(_resolve, _reject) {
+function makeDeferred<T>(): [Promise<T>, () => void, () => void] {
+  let resolve: () => void
+  let reject: () => void
+  const promise = new Promise(function (_resolve, _reject) {
     resolve = _resolve
     reject = _reject
   })
 
-  // eslint-disable-next-line flowtype/no-flow-fix-me-comments
-  // $FlowFixMe
-  return [promise, resolve, reject]
+  return [promise as Promise<T>, resolve!, reject!]
 }
 
-type SimpleRequest = {
-  method: string,
-  url: string,
-  body: ?FormData,
+interface SimpleRequest {
+  method: string
+  url: string
+  body: FormData | null
   headers: Headers
 }
 
-export type SimpleResponse = {
-  url: string,
-  status: number,
-  statusText: string,
-  headers: Headers,
-  text: string,
-  // eslint-disable-next-line flowtype/no-weak-types
-  json: {[string]: any},
+export interface SimpleResponse {
+  url: string
+  status: number
+  statusText: string
+  headers: Headers
+  text: string
+  json: {[key: string]: unknown}
   html: DocumentFragment
 }
 
-type Kicker = {
-  text: () => Promise<SimpleResponse>,
-  json: () => Promise<SimpleResponse>,
+interface Kicker {
+  text: () => Promise<SimpleResponse>
+  json: () => Promise<SimpleResponse>
   html: () => Promise<SimpleResponse>
 }
 
 export type RemoteFormHandler = (form: HTMLFormElement, kicker: Kicker, req: SimpleRequest) => void
 
 let formHandlers: Map<string, RemoteFormHandler[]>
+type Handler = (form: HTMLFormElement) => void
 
-const afterHandlers = []
-const beforeHandlers = []
+const afterHandlers: Handler[] = []
+const beforeHandlers: Handler[] = []
 
-export function afterRemote(fn: (form: HTMLFormElement) => mixed) {
+export function afterRemote(fn: Handler) {
   afterHandlers.push(fn)
 }
 
-export function beforeRemote(fn: (form: HTMLFormElement) => mixed) {
+export function beforeRemote(fn: Handler) {
   beforeHandlers.push(fn)
 }
 
@@ -89,7 +85,10 @@ export function remoteForm(selector: string, fn: RemoteFormHandler) {
 export function remoteUninstall(selector: string, fn: RemoteFormHandler) {
   if (formHandlers) {
     const handlers = formHandlers.get(selector) || []
-    formHandlers.set(selector, handlers.filter(x => x !== fn))
+    formHandlers.set(
+      selector,
+      handlers.filter(x => x !== fn)
+    )
   }
 }
 
@@ -115,11 +114,11 @@ function handleSubmit(event: Event) {
   }
 
   const req = buildRequest(form)
-  const [kickerPromise, ultimateResolve, ultimateReject] = makeDeferred()
+  const [kickerPromise, ultimateResolve, ultimateReject] = makeDeferred<SimpleResponse>()
 
   event.preventDefault()
   processHandlers(matches, form, req, kickerPromise).then(
-    async performAsyncSubmit => {
+    async (performAsyncSubmit: unknown) => {
       if (performAsyncSubmit) {
         for (const handler of beforeHandlers) {
           await handler(form)
@@ -128,6 +127,7 @@ function handleSubmit(event: Event) {
         // TODO: ensure that these exceptions are processed by our global error handler
         remoteSubmit(req)
           .then(ultimateResolve, ultimateReject)
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           .catch(() => {})
           .then(() => {
             for (const handler of afterHandlers) {
@@ -139,7 +139,7 @@ function handleSubmit(event: Event) {
         form.submit()
       }
     },
-    err => {
+    (err: Error) => {
       // TODO: special "cancel" error object to halt processing and avoid
       // submitting the form
       form.submit()
@@ -202,7 +202,7 @@ function buildRequest(form: HTMLFormElement): SimpleRequest {
   return req
 }
 
-async function remoteSubmit(req): Promise<SimpleResponse> {
+async function remoteSubmit(req: SimpleRequest): Promise<SimpleResponse> {
   const response = await window.fetch(req.url, {
     method: req.method,
     body: req.body !== null ? req.body : undefined,
@@ -217,7 +217,7 @@ async function remoteSubmit(req): Promise<SimpleResponse> {
     headers: response.headers,
     text: '',
     get json() {
-      // eslint-disable-next-line no-shadow
+      // eslint-disable-next-line no-shadow, @typescript-eslint/no-this-alias
       const response: SimpleResponse = this
       const data = JSON.parse(response.text)
       delete response.json
@@ -225,7 +225,7 @@ async function remoteSubmit(req): Promise<SimpleResponse> {
       return response.json
     },
     get html() {
-      // eslint-disable-next-line no-shadow
+      // eslint-disable-next-line no-shadow, @typescript-eslint/no-this-alias
       const response: SimpleResponse = this
       delete response.html
 

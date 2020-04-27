@@ -1,12 +1,20 @@
 {
+  "parser": "@typescript-eslint/parser",
   "extends": [
     "plugin:github/es6",
     "plugin:github/browser",
-    "plugin:github/flow"
+    "plugin:github/typescript"
   ],
+  "rules": {
+    "@typescript-eslint/no-non-null-assertion": "off"
+  },
   "overrides": [
     {
       "files": "test/**/*.js",
+      "parser": "espree",
+      "parserOptions": {
+        "ecmaVersion": 2020
+      },
       "rules": {
         "flowtype/require-valid-file-annotation": "off",
         "github/unescaped-html-literal": "off",

@@ -20,11 +20,14 @@ function checker(request, response, next) {
   next()
 }
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
     basePath: '..',
     frameworks: ['mocha', 'chai'],
-    files: [{pattern: 'dist/index.esm.js', type: 'module'}, {pattern: 'test/test.js', type: 'module'}],
+    files: [
+      {pattern: 'dist/index.js', type: 'module'},
+      {pattern: 'test/test.js', type: 'module'}
+    ],
     reporters: ['mocha'],
     port: 9876,
     colors: true,
