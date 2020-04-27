@@ -1,4 +1,4 @@
-const {remoteForm: _remoteForm, remoteUninstall} = window.remoteForm
+import {remoteForm as _remoteForm, remoteUninstall} from '../dist/index.esm.js'
 
 describe('remoteForm', function() {
   let htmlForm
@@ -63,17 +63,21 @@ describe('remoteForm', function() {
   })
 
   it('chained handlers', function(done) {
-    let previousCallbackCalled = false
+    let callbacksCalled = 0
+
     remoteForm('.remote-widget', async function() {
-      await new Promise(resolve => setTimeout(resolve, 10))
-      previousCallbackCalled = true
+      callbacksCalled++
+
+      if (callbacksCalled === 2) {
+        done()
+      }
     })
 
     remoteForm('.my-remote-form', async function() {
-      if (previousCallbackCalled) {
+      callbacksCalled++
+
+      if (callbacksCalled === 2) {
         done()
-      } else {
-        done(new Error('The previous remote form callback was not called'))
       }
     })
 
