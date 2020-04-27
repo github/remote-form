@@ -42,8 +42,5 @@
     "mocha": "^7.1.1",
     "typescript": "^3.8.3"
   },
-  "dependencies": {
-    "form-data-entries": "^1.0.4",
-    "selector-set": "^1.1.5"
-  }
+  "dependencies": {}
 }

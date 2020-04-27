@@ -1,6 +1,3 @@
-import SelectorSet from 'selector-set'
-import formDataEntries from 'form-data-entries'
-
 // Parse HTML text into document fragment.
 function parseHTML(document: Document, html: string): DocumentFragment {
   const template = document.createElement('template')
@@ -10,7 +7,7 @@ function parseHTML(document: Document, html: string): DocumentFragment {
 
 function serialize(form: HTMLFormElement): string {
   const params = new URLSearchParams()
-  const entries = 'entries' in FormData.prototype ? new FormData(form).entries() : formDataEntries(form)
+  const entries = new FormData(form).entries()
   for (const [name, value] of [...entries]) {
     params.append(name, value.toString())
   }
@@ -60,10 +57,9 @@ interface Kicker {
   html: () => Promise<SimpleResponse>
 }
 
-export type RemoteFormHandler = (form: HTMLFormElement, kicker: Kicker, req: SimpleRequest) => void | Promise<void>
+export type RemoteFormHandler = (form: HTMLFormElement, kicker: Kicker, req: SimpleRequest) => void
 
-let selectorSet: SelectorSet<RemoteFormHandler>
-
+let formHandlers: Map<string, RemoteFormHandler[]>
 type Handler = (form: HTMLFormElement) => void
 
 const afterHandlers: Handler[] = []
@@ -78,17 +74,33 @@ export function beforeRemote(fn: Handler) {
 }
 
 export function remoteForm(selector: string, fn: RemoteFormHandler) {
-  if (!selectorSet) {
-    selectorSet = new SelectorSet()
+  if (!formHandlers) {
+    formHandlers = new Map<string, RemoteFormHandler[]>()
     document.addEventListener('submit', handleSubmit)
   }
-  selectorSet.add(selector, fn)
+  const handlers = formHandlers.get(selector) || []
+  formHandlers.set(selector, [...handlers, fn])
 }
 
 export function remoteUninstall(selector: string, fn: RemoteFormHandler) {
-  if (selectorSet) {
-    selectorSet.remove(selector, fn)
+  if (formHandlers) {
+    const handlers = formHandlers.get(selector) || []
+    formHandlers.set(
+      selector,
+      handlers.filter(x => x !== fn)
+    )
   }
+}
+
+function getMatches(el: HTMLElement): RemoteFormHandler[] {
+  const results = []
+  for (const selector of formHandlers.keys()) {
+    if (el.matches(selector)) {
+      const handlers = formHandlers.get(selector) || []
+      results.push(...handlers)
+    }
+  }
+  return results
 }
 
 function handleSubmit(event: Event) {
@@ -96,8 +108,8 @@ function handleSubmit(event: Event) {
     return
   }
   const form = event.target
-  const matches = selectorSet && selectorSet.matches(form)
-  if (!matches || matches.length === 0) {
+  const matches = getMatches(form)
+  if (matches.length === 0) {
     return
   }
 
@@ -141,7 +153,7 @@ function handleSubmit(event: Event) {
 // Process each handler sequentially until it either completes or calls the
 // kicker function.
 async function processHandlers(
-  matches: Array<{data: (form: HTMLFormElement, kicker: Kicker, req: SimpleRequest) => void}>,
+  matches: RemoteFormHandler[],
   form: HTMLFormElement,
   req: SimpleRequest,
   kickerPromise: Promise<SimpleResponse>
@@ -165,7 +177,7 @@ async function processHandlers(
         return kick()
       }
     }
-    await Promise.race([kickerCalled, match.data.call(null, form, kicker, req)])
+    await Promise.race([kickerCalled, match(form, kicker, req)])
   }
   return kickerWasCalled
 }

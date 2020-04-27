@@ -22,12 +22,11 @@ function checker(request, response, next) {
 
 module.exports = function (config) {
   config.set({
+    basePath: '..',
     frameworks: ['mocha', 'chai'],
     files: [
-      '../node_modules/form-data-entries/index.umd.js',
-      '../node_modules/selector-set/selector-set.js',
-      '../dist/index.umd.js',
-      'test.js'
+      {pattern: 'dist/index.js', type: 'module'},
+      {pattern: 'test/test.js', type: 'module'}
     ],
     reporters: ['mocha'],
     port: 9876,
