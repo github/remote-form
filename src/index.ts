@@ -14,7 +14,7 @@ function serialize(form: HTMLFormElement): string {
   return params.toString()
 }
 
-class ErrorWithResponse extends Error {
+export class ErrorWithResponse extends Error {
   response: SimpleResponse
 
   constructor(message: string, response: SimpleResponse) {
@@ -34,7 +34,7 @@ function makeDeferred<T>(): [Promise<T>, () => void, () => void] {
   return [promise as Promise<T>, resolve!, reject!]
 }
 
-interface SimpleRequest {
+export interface SimpleRequest {
   method: string
   url: string
   body: FormData | null
@@ -47,11 +47,12 @@ export interface SimpleResponse {
   statusText: string
   headers: Headers
   text: string
-  json: {[key: string]: unknown}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  json: any
   html: DocumentFragment
 }
 
-interface Kicker {
+export interface Kicker {
   text: () => Promise<SimpleResponse>
   json: () => Promise<SimpleResponse>
   html: () => Promise<SimpleResponse>
