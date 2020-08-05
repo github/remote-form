@@ -66,15 +66,15 @@ type Handler = (form: HTMLFormElement) => void
 const afterHandlers: Handler[] = []
 const beforeHandlers: Handler[] = []
 
-export function afterRemote(fn: Handler) {
+export function afterRemote(fn: Handler): void {
   afterHandlers.push(fn)
 }
 
-export function beforeRemote(fn: Handler) {
+export function beforeRemote(fn: Handler): void {
   beforeHandlers.push(fn)
 }
 
-export function remoteForm(selector: string, fn: RemoteFormHandler) {
+export function remoteForm(selector: string, fn: RemoteFormHandler): void {
   if (!formHandlers) {
     formHandlers = new Map<string, RemoteFormHandler[]>()
     document.addEventListener('submit', handleSubmit)
@@ -83,7 +83,7 @@ export function remoteForm(selector: string, fn: RemoteFormHandler) {
   formHandlers.set(selector, [...handlers, fn])
 }
 
-export function remoteUninstall(selector: string, fn: RemoteFormHandler) {
+export function remoteUninstall(selector: string, fn: RemoteFormHandler): void {
   if (formHandlers) {
     const handlers = formHandlers.get(selector) || []
     formHandlers.set(

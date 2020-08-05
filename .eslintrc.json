@@ -1,11 +1,12 @@
 {
   "parser": "@typescript-eslint/parser",
   "extends": [
-    "plugin:github/es6",
+    "plugin:github/recommended",
     "plugin:github/browser",
     "plugin:github/typescript"
   ],
   "rules": {
+    "github/no-then": "off",
     "@typescript-eslint/no-non-null-assertion": "off"
   },
   "overrides": [
@@ -16,7 +17,6 @@
         "ecmaVersion": 2020
       },
       "rules": {
-        "flowtype/require-valid-file-annotation": "off",
         "github/unescaped-html-literal": "off",
         "eslint-comments/no-use": "off"
       },
