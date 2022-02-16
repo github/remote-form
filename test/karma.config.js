@@ -1,3 +1,5 @@
+process.env.CHROME_BIN = require('chromium').path
+
 function checker(request, response, next) {
   if (request.method === 'POST' && request.url === '/ok') {
     response.setHeader('content-type', 'text/html')
@@ -25,8 +27,8 @@ module.exports = function (config) {
     basePath: '..',
     frameworks: ['mocha', 'chai'],
     files: [
-      {pattern: 'dist/index.js', type: 'module'},
-      {pattern: 'test/test.js', type: 'module'}
+      { pattern: 'dist/index.js', type: 'module' },
+      { pattern: 'test/test.js', type: 'module' }
     ],
     reporters: ['mocha'],
     port: 9876,
