@@ -1,6 +1,7 @@
 // Parse HTML text into document fragment.
 function parseHTML(document: Document, html: string): DocumentFragment {
   const template = document.createElement('template')
+  // eslint-disable-next-line github/no-inner-html
   template.innerHTML = html
   return document.importNode(template.content, true)
 }
@@ -23,8 +24,8 @@ export class ErrorWithResponse extends Error {
   }
 }
 
-function makeDeferred<T>(): [Promise<T>, () => void, () => void] {
-  let resolve: () => void
+function makeDeferred<T>(): [Promise<T>, (x?: unknown) => void, () => void] {
+  let resolve: (x?: unknown) => void
   let reject: () => void
   const promise = new Promise(function (_resolve, _reject) {
     resolve = _resolve
@@ -218,7 +219,7 @@ async function remoteSubmit(req: SimpleRequest): Promise<SimpleResponse> {
     headers: response.headers,
     text: '',
     get json() {
-      // eslint-disable-next-line no-shadow, @typescript-eslint/no-this-alias
+      // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-this-alias
       const response: SimpleResponse = this
       const data = JSON.parse(response.text)
       delete response.json
@@ -226,8 +227,10 @@ async function remoteSubmit(req: SimpleRequest): Promise<SimpleResponse> {
       return response.json
     },
     get html() {
-      // eslint-disable-next-line no-shadow, @typescript-eslint/no-this-alias
+      // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-this-alias
       const response: SimpleResponse = this
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       delete response.html
 
       response.html = parseHTML(document, response.text)

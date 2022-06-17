@@ -18,7 +18,10 @@
       },
       "rules": {
         "github/unescaped-html-literal": "off",
-        "eslint-comments/no-use": "off"
+        "import/no-unresolved": "off",
+        "import/extensions": "off",
+        "eslint-comments/no-use": "off",
+        "github/no-inner-html": "off"
       },
       "env": {
         "mocha": true
