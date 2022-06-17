@@ -105,7 +105,7 @@ function getMatches(el: HTMLElement): RemoteFormHandler[] {
 }
 
 function handleSubmit(event: Event) {
-  if (!(event.target instanceof HTMLFormElement)) {
+  if (!(event.target instanceof HTMLFormElement) || event.defaultPrevented) {
     return
   }
   const form = event.target
