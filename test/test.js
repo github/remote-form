@@ -139,4 +139,20 @@ describe('remoteForm', function () {
     button.form.action += '?a=b'
     button.click()
   })
+
+  it('does not submit the request if default is already prevented', function () {
+    // prevent default before this event reaches the remote-form listener
+    const defaultPreventHandler = event => event.preventDefault()
+    document.addEventListener('submit', defaultPreventHandler, {capture: true})
+
+    let handlerCalled = false
+    remoteForm('.my-remote-form', async function () {
+      handlerCalled = true
+    })
+
+    document.querySelector('button[type=submit]').click()
+
+    assert.isFalse(handlerCalled)
+    document.removeEventListener('submit', defaultPreventHandler, {capture: true})
+  })
 })
