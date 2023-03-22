@@ -78,7 +78,10 @@ export function beforeRemote(fn: Handler): void {
 export function remoteForm(selector: string, fn: RemoteFormHandler): void {
   if (!formHandlers) {
     formHandlers = new Map<string, RemoteFormHandler[]>()
-    document.addEventListener('submit', handleSubmit)
+
+    if (typeof document !== 'undefined') {
+      document.addEventListener('submit', handleSubmit)
+    }
   }
   const handlers = formHandlers.get(selector) || []
   formHandlers.set(selector, [...handlers, fn])
