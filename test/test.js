@@ -45,6 +45,11 @@ describe('remoteForm', function () {
     document.querySelector('button[type=submit]').click()
   })
 
+  it('installs remoteForm on form reference', function (done) {
+    remoteForm(htmlForm, async () => done())
+    document.querySelector('button[type=submit]').click()
+  })
+
   it('server failure scenario', function (done) {
     htmlForm.action = 'server-error'
 

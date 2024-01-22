@@ -61,7 +61,11 @@ export interface Kicker {
 
 export type RemoteFormHandler = (form: HTMLFormElement, kicker: Kicker, req: SimpleRequest) => void
 
-let formHandlers: Map<string, RemoteFormHandler[]>
+// remoteForm can be installed with a selector or reference to a <form>
+// element.
+type Installable = string | HTMLFormElement
+
+let formHandlers: Map<Installable, RemoteFormHandler[]>
 type Handler = (form: HTMLFormElement) => void
 
 const afterHandlers: Handler[] = []
@@ -75,7 +79,7 @@ export function beforeRemote(fn: Handler): void {
   beforeHandlers.push(fn)
 }
 
-export function remoteForm(selector: string, fn: RemoteFormHandler): void {
+export function remoteForm(selector: Installable, fn: RemoteFormHandler): void {
   if (!formHandlers) {
     formHandlers = new Map<string, RemoteFormHandler[]>()
 
@@ -87,7 +91,7 @@ export function remoteForm(selector: string, fn: RemoteFormHandler): void {
   formHandlers.set(selector, [...handlers, fn])
 }
 
-export function remoteUninstall(selector: string, fn: RemoteFormHandler): void {
+export function remoteUninstall(selector: Installable, fn: RemoteFormHandler): void {
   if (formHandlers) {
     const handlers = formHandlers.get(selector) || []
     formHandlers.set(
@@ -99,8 +103,19 @@ export function remoteUninstall(selector: string, fn: RemoteFormHandler): void {
 
 function getMatches(el: HTMLElement): RemoteFormHandler[] {
   const results = []
+
+  const hasMatch = (ref: Installable) => {
+    if (typeof ref === 'object') {
+      return ref === el
+    } else if (typeof ref === 'string') {
+      return el.matches(ref)
+    } else {
+      return false
+    }
+  }
+
   for (const selector of formHandlers.keys()) {
-    if (el.matches(selector)) {
+    if (hasMatch(selector)) {
       const handlers = formHandlers.get(selector) || []
       results.push(...handlers)
     }
