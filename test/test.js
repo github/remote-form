@@ -47,7 +47,7 @@ describe('remoteForm', function () {
 
   it('installs remoteForm on form reference', function (done) {
     remoteForm(htmlForm, async form => {
-      assert.equal(form, htmlForm)
+      assert.deepEqual(form, htmlForm)
       done()
     })
 
