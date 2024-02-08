@@ -46,7 +46,11 @@ describe('remoteForm', function () {
   })
 
   it('installs remoteForm on form reference', function (done) {
-    remoteForm(htmlForm, async () => done())
+    remoteForm(htmlForm, async form => {
+      assert.equal(form, htmlForm)
+      done()
+    })
+
     document.querySelector('button[type=submit]').click()
   })
 
