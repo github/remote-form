@@ -65,6 +65,9 @@ export type RemoteFormHandler = (form: HTMLFormElement, kicker: Kicker, req: Sim
 // element.
 type Installable = string | HTMLFormElement
 
+// Any element that submits a <form>
+type HTMLSubmitElement = HTMLButtonElement | HTMLInputElement
+
 let formHandlers: Map<Installable, RemoteFormHandler[]>
 type Handler = (form: HTMLFormElement) => void
 
@@ -133,7 +136,16 @@ function handleSubmit(event: Event) {
     return
   }
 
-  const req = buildRequest(form)
+  let submitter
+
+  if (event instanceof SubmitEvent) {
+    submitter = event.submitter as HTMLSubmitElement
+  } else {
+    submitter = null
+  }
+
+  const req = buildRequest(form, submitter)
+
   const [kickerPromise, ultimateResolve, ultimateReject] = makeDeferred<SimpleResponse>()
 
   event.preventDefault()
@@ -202,9 +214,9 @@ async function processHandlers(
   return kickerWasCalled
 }
 
-function buildRequest(form: HTMLFormElement): SimpleRequest {
+function buildRequest(form: HTMLFormElement, submitter: HTMLSubmitElement | null): SimpleRequest {
   const req: SimpleRequest = {
-    method: form.method || 'GET',
+    method: submitter?.formMethod || form.method || 'GET',
     url: form.action,
     headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
     body: null
