@@ -164,4 +164,15 @@ describe('remoteForm', function () {
     assert.isFalse(handlerCalled)
     document.removeEventListener('submit', defaultPreventHandler, {capture: true})
   })
+
+  it('overwrites form method with buttons formmethod', function (done) {
+    remoteForm(htmlForm, async (form, wants, req) => {
+      assert.equal(req.method.toUpperCase(), 'GET')
+      done()
+    })
+
+    const button = document.querySelector('button[type=submit]')
+    button.formMethod = 'get'
+    button.click()
+  })
 })
