@@ -11,11 +11,10 @@
   "types:": "dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf dist",
-    "lint": "eslint src/*.ts test/test.js",
+    "lint": "eslint src/*.ts test/test.spec.js",
     "prebuild": "npm run clean && npm run lint && mkdir dist",
     "build": "tsc",
-    "pretest": "npm run build",
-    "test": "karma start test/karma.config.js",
+    "test": "vitest run",
     "prepublishOnly": "npm run build",
     "postpublish": "npm publish --ignore-scripts --@github:registry='https://npm.pkg.github.com'"
   },
@@ -31,16 +30,11 @@
   "license": "MIT",
   "devDependencies": {
     "@github/prettier-config": "0.0.4",
-    "chai": "^4.2.0",
-    "chromium": "^3.0.3",
+    "@vitest/browser": "^3.2.4",
     "eslint": "^8.17.0",
     "eslint-plugin-github": "^4.3.6",
-    "karma": "^6.4.0",
-    "karma-chai": "^0.1.0",
-    "karma-chrome-launcher": "^3.1.0",
-    "karma-mocha": "^2.0.1",
-    "karma-mocha-reporter": "^2.2.5",
-    "mocha": "^10.0.0",
-    "typescript": "^4.7.3"
+    "playwright": "^1.56.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
   }
 }
