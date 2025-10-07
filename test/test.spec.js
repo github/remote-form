@@ -32,66 +32,74 @@ describe('remoteForm', function () {
     installed.length = 0
   })
 
-  it('submits the form with fetch', function (done) {
-    remoteForm('.my-remote-form', async function (form, wants, req) {
-      expect(req.url.endsWith('/ok')).toBe(true)
-      expect(req.body).toBeInstanceOf(FormData)
+  it('submits the form with fetch', function () {
+    return new Promise(resolve => {
+      remoteForm('.my-remote-form', async function (form, wants, req) {
+        expect(req.url.endsWith('/ok')).toBe(true)
+        expect(req.body).toBeInstanceOf(FormData)
 
-      const response = await wants.html()
-      expect(form.matches('.my-remote-form')).toBe(true)
-      expect(response.html.querySelector('b')).toBeTruthy()
-      done()
+        const response = await wants.html()
+        expect(form.matches('.my-remote-form')).toBe(true)
+        expect(response.html.querySelector('b')).toBeTruthy()
+        resolve()
+      })
+
+      document.querySelector('button[type=submit]').click()
     })
-
-    document.querySelector('button[type=submit]').click()
   })
 
-  it('installs remoteForm on form reference', function (done) {
-    remoteForm(htmlForm, async form => {
-      expect(form).toEqual(htmlForm)
-      done()
-    })
+  it('installs remoteForm on form reference', function () {
+    return new Promise(resolve => {
+      remoteForm(htmlForm, async form => {
+        expect(form).toEqual(htmlForm)
+        resolve()
+      })
 
-    document.querySelector('button[type=submit]').click()
+      document.querySelector('button[type=submit]').click()
+    })
   })
 
-  it('server failure scenario', function (done) {
+  it('server failure scenario', function () {
     htmlForm.action = 'server-error'
 
-    remoteForm('.my-remote-form', async function (form, wants) {
-      try {
-        await wants.html()
-        expect(false).toBe(true) // should not resolve
-      } catch (error) {
-        expect(error.response.status).toBe(500)
-        expect(error.response.json['message']).toBe('Server error!')
-        done()
-      }
-    })
+    return new Promise(resolve => {
+      remoteForm('.my-remote-form', async function (form, wants) {
+        try {
+          await wants.html()
+          expect(false).toBe(true) // should not resolve
+        } catch (error) {
+          expect(error.response.status).toBe(500)
+          expect(error.response.json['message']).toBe('Server error!')
+          resolve()
+        }
+      })
 
-    document.querySelector('button[type=submit]').click()
+      document.querySelector('button[type=submit]').click()
+    })
   })
 
-  it('chained handlers', function (done) {
+  it('chained handlers', function () {
     let callbacksCalled = 0
 
-    remoteForm('.remote-widget', async function () {
-      callbacksCalled++
+    return new Promise(resolve => {
+      remoteForm('.remote-widget', async function () {
+        callbacksCalled++
 
-      if (callbacksCalled === 2) {
-        done()
-      }
+        if (callbacksCalled === 2) {
+          resolve()
+        }
+      })
+
+      remoteForm('.my-remote-form', async function () {
+        callbacksCalled++
+
+        if (callbacksCalled === 2) {
+          resolve()
+        }
+      })
+
+      document.querySelector('button[type=submit]').click()
     })
-
-    remoteForm('.my-remote-form', async function () {
-      callbacksCalled++
-
-      if (callbacksCalled === 2) {
-        done()
-      }
-    })
-
-    document.querySelector('button[type=submit]').click()
   })
 
   it('exception in js handlers results in form submitting normally', async function () {
@@ -126,28 +134,32 @@ describe('remoteForm', function () {
     expect(iframe.contentWindow.location.href).toMatch(/\/ok$/)
   })
 
-  it('GET form serializes data to URL', function (done) {
-    remoteForm('.my-remote-form', async function (form, wants, req) {
-      expect(req.body).toBeNull()
-      await wants.html()
-      done()
-    })
+  it('GET form serializes data to URL', function () {
+    return new Promise(resolve => {
+      remoteForm('.my-remote-form', async function (form, wants, req) {
+        expect(req.body).toBeNull()
+        await wants.html()
+        resolve()
+      })
 
-    const button = document.querySelector('button[type=submit]')
-    button.form.method = 'GET'
-    button.click()
+      const button = document.querySelector('button[type=submit]')
+      button.form.method = 'GET'
+      button.click()
+    })
   })
 
-  it('GET form serializes data to URL with existing query', function (done) {
-    remoteForm('.my-remote-form', async function (form, wants) {
-      await wants.html()
-      done()
-    })
+  it('GET form serializes data to URL with existing query', function () {
+    return new Promise(resolve => {
+      remoteForm('.my-remote-form', async function (form, wants) {
+        await wants.html()
+        resolve()
+      })
 
-    const button = document.querySelector('button[type=submit]')
-    button.form.method = 'GET'
-    button.form.action += '?a=b'
-    button.click()
+      const button = document.querySelector('button[type=submit]')
+      button.form.method = 'GET'
+      button.form.action += '?a=b'
+      button.click()
+    })
   })
 
   it('does not submit the request if default is already prevented', function () {
@@ -166,14 +178,16 @@ describe('remoteForm', function () {
     document.removeEventListener('submit', defaultPreventHandler, {capture: true})
   })
 
-  it('overwrites form method with buttons formmethod', function (done) {
-    remoteForm(htmlForm, async (form, wants, req) => {
-      expect(req.method.toUpperCase()).toBe('GET')
-      done()
-    })
+  it('overwrites form method with buttons formmethod', function () {
+    return new Promise(resolve => {
+      remoteForm(htmlForm, async (form, wants, req) => {
+        expect(req.method.toUpperCase()).toBe('GET')
+        resolve()
+      })
 
-    const button = document.querySelector('button[type=submit]')
-    button.formMethod = 'get'
-    button.click()
+      const button = document.querySelector('button[type=submit]')
+      button.formMethod = 'get'
+      button.click()
+    })
   })
 })
