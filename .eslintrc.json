@@ -25,6 +25,13 @@
         "github/no-inner-html": "off",
         "filenames/match-regex": "off"
       }
+    },
+    {
+      "files": "vitest.config.ts",
+      "rules": {
+        "github/unescaped-html-literal": "off",
+        "import/no-unresolved": "off"
+      }
     }
   ]
 }

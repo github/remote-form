@@ -7,16 +7,16 @@ export default defineConfig({
       provider: 'playwright',
       instances: [
         {
-          browser: 'chromium',
-        },
+          browser: 'chromium'
+        }
       ],
-      headless: true,
-    },
+      headless: true
+    }
   },
   server: {
     middleware: {
-      mode: 'html',
-    },
+      mode: 'html'
+    }
   },
   plugins: [
     {
@@ -43,7 +43,7 @@ export default defineConfig({
           }
           next()
         })
-      },
-    },
-  ],
+      }
+    }
+  ]
 })
