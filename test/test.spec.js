@@ -9,7 +9,7 @@ describe('remoteForm', function () {
     document.body.innerHTML = `
       <form action="/ok" class="my-remote-form remote-widget" method="post" target="submit-fallback">
         <input name="query" value="hello">
-        <button type="submit">Submit<button>
+        <button type="submit">Submit</button>
       </form>
 
       <iframe name="submit-fallback" style="display: none"></iframe>

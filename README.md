@@ -68,8 +68,11 @@ Browsers without native [custom element support][support] require a [polyfill][]
 
 ```
 npm install
+npx playwright install chromium
 npm test
 ```
+
+Note: Tests use Vitest with Playwright browser mode. The `npx playwright install chromium` command downloads the browser needed for running tests.
 
 ## License
 

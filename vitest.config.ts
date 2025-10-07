@@ -8,9 +8,6 @@ export default defineConfig({
       instances: [
         {
           browser: 'chromium',
-          launch: {
-            executablePath: '/usr/bin/chromium-browser',
-          },
         },
       ],
       headless: true,
