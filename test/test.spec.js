@@ -1,4 +1,5 @@
-import {remoteForm as _remoteForm, remoteUninstall} from '../dist/index.js'
+import {describe, it, beforeEach, afterEach, expect} from 'vitest'
+import {remoteForm as _remoteForm, remoteUninstall} from '../src/index.ts'
 
 describe('remoteForm', function () {
   let htmlForm
@@ -33,12 +34,12 @@ describe('remoteForm', function () {
 
   it('submits the form with fetch', function (done) {
     remoteForm('.my-remote-form', async function (form, wants, req) {
-      assert.ok(req.url.endsWith('/ok'))
-      assert.instanceOf(req.body, FormData)
+      expect(req.url.endsWith('/ok')).toBe(true)
+      expect(req.body).toBeInstanceOf(FormData)
 
       const response = await wants.html()
-      assert.ok(form.matches('.my-remote-form'))
-      assert.ok(response.html.querySelector('b'))
+      expect(form.matches('.my-remote-form')).toBe(true)
+      expect(response.html.querySelector('b')).toBeTruthy()
       done()
     })
 
@@ -47,7 +48,7 @@ describe('remoteForm', function () {
 
   it('installs remoteForm on form reference', function (done) {
     remoteForm(htmlForm, async form => {
-      assert.deepEqual(form, htmlForm)
+      expect(form).toEqual(htmlForm)
       done()
     })
 
@@ -60,10 +61,10 @@ describe('remoteForm', function () {
     remoteForm('.my-remote-form', async function (form, wants) {
       try {
         await wants.html()
-        assert.ok(false, 'should not resolve')
+        expect(false).toBe(true) // should not resolve
       } catch (error) {
-        assert.equal(error.response.status, 500)
-        assert.equal(error.response.json['message'], 'Server error!')
+        expect(error.response.status).toBe(500)
+        expect(error.response.json['message']).toBe('Server error!')
         done()
       }
     })
@@ -101,16 +102,16 @@ describe('remoteForm', function () {
     remoteForm('.my-remote-form', async function (form, wants) {
       try {
         await wants.text()
-        assert.ok(false, 'should never happen')
+        expect(false).toBe(true) // should never happen
       } catch (error) {
-        assert.ok(true)
+        expect(true).toBe(true)
       }
     })
 
     function errorHandler(event) {
       event.preventDefault()
     }
-    const originalMochaError = window.onerror
+    const originalError = window.onerror
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     window.onerror = function () {}
     window.addEventListener('error', errorHandler)
@@ -120,14 +121,14 @@ describe('remoteForm', function () {
     const iframe = await new Promise(resolve => {
       document.querySelector('iframe[name=submit-fallback]').addEventListener('load', event => resolve(event.target))
     })
-    window.onerror = originalMochaError
+    window.onerror = originalError
     window.removeEventListener('error', errorHandler)
-    assert.match(iframe.contentWindow.location.href, /\/ok$/)
+    expect(iframe.contentWindow.location.href).toMatch(/\/ok$/)
   })
 
   it('GET form serializes data to URL', function (done) {
     remoteForm('.my-remote-form', async function (form, wants, req) {
-      assert.isNull(req.body)
+      expect(req.body).toBeNull()
       await wants.html()
       done()
     })
@@ -161,13 +162,13 @@ describe('remoteForm', function () {
 
     document.querySelector('button[type=submit]').click()
 
-    assert.isFalse(handlerCalled)
+    expect(handlerCalled).toBe(false)
     document.removeEventListener('submit', defaultPreventHandler, {capture: true})
   })
 
   it('overwrites form method with buttons formmethod', function (done) {
     remoteForm(htmlForm, async (form, wants, req) => {
-      assert.equal(req.method.toUpperCase(), 'GET')
+      expect(req.method.toUpperCase()).toBe('GET')
       done()
     })
 
