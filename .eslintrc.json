@@ -20,15 +20,11 @@
         "github/unescaped-html-literal": "off",
         "import/no-unresolved": "off",
         "import/extensions": "off",
+        "import/named": "off",
         "eslint-comments/no-use": "off",
-        "github/no-inner-html": "off"
-      },
-      "env": {
-        "mocha": true
-      },
-      "globals": {
-        "assert": true,
-        "remoteForm": true
+        "github/no-inner-html": "off",
+        "i18n-text/no-en": "off",
+        "filenames/match-regex": "off"
       }
     }
   ]

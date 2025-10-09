@@ -1,4 +1,4 @@
-process.env.CHROME_BIN = require('chromium').path
+import {defineConfig} from 'vitest/config'
 
 function checker(request, response, next) {
   if (request.method === 'POST' && request.url === '/ok') {
@@ -22,34 +22,31 @@ function checker(request, response, next) {
   next()
 }
 
-module.exports = function (config) {
-  config.set({
-    basePath: '..',
-    frameworks: ['mocha', 'chai'],
-    files: [
-      { pattern: 'dist/index.js', type: 'module' },
-      { pattern: 'test/test.js', type: 'module' }
-    ],
-    reporters: ['mocha'],
+export default defineConfig({
+  test: {
+    browser: {
+      enabled: true,
+      name: 'chromium',
+      provider: 'playwright',
+      headless: true
+    }
+  },
+  preview: {
+    port: 9876
+  },
+  server: {
     port: 9876,
-    colors: true,
-    logLevel: config.LOG_INFO,
-    browsers: ['ChromeHeadlessNoSandbox'],
-    customLaunchers: {
-      ChromeHeadlessNoSandbox: {
-        base: 'ChromeHeadless',
-        flags: ['--no-sandbox']
+    middlewareMode: false
+  },
+  plugins: [
+    {
+      name: 'test-server-middleware',
+      configureServer(server) {
+        server.middlewares.use(checker)
+      },
+      configurePreviewServer(server) {
+        server.middlewares.use(checker)
       }
-    },
-    autoWatch: false,
-    singleRun: true,
-    concurrency: Infinity,
-    middleware: ['checker'],
-    plugins: [
-      'karma-*',
-      {
-        'middleware:checker': ['value', checker]
-      }
-    ]
-  })
-}
+    }
+  ]
+})
