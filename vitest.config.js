@@ -1,4 +1,5 @@
 import {defineConfig} from 'vitest/config'
+import {playwright} from '@vitest/browser-playwright'
 
 function checker(request, response, next) {
   if (request.method === 'POST' && request.url === '/ok') {
@@ -26,9 +27,13 @@ export default defineConfig({
   test: {
     browser: {
       enabled: true,
-      name: 'chromium',
-      provider: 'playwright',
-      headless: true
+      provider: playwright(),
+      instances: [
+        {
+          browser: 'chromium',
+          headless: true
+        }
+      ]
     }
   },
   preview: {
