@@ -111,7 +111,7 @@ describe('remoteForm', function () {
       try {
         await wants.text()
         expect(false).toBe(true) // should never happen
-      } catch (error) {
+      } catch {
         expect(true).toBe(true)
       }
     })
@@ -120,7 +120,6 @@ describe('remoteForm', function () {
       event.preventDefault()
     }
     const originalError = window.onerror
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     window.onerror = function () {}
     window.addEventListener('error', errorHandler)
 

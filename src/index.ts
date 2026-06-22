@@ -159,7 +159,6 @@ function handleSubmit(event: Event) {
         // TODO: ensure that these exceptions are processed by our global error handler
         remoteSubmit(req)
           .then(ultimateResolve, ultimateReject)
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
           .catch(() => {})
           .then(() => {
             for (const handler of afterHandlers) {
