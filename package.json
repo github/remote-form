@@ -27,12 +27,12 @@
   "license": "MIT",
   "devDependencies": {
     "@github/prettier-config": "0.0.4",
-    "@vitest/browser": "4.1.9",
-    "@vitest/browser-playwright": "4.1.9",
+    "@vitest/browser": "4.1.10",
+    "@vitest/browser-playwright": "4.1.10",
     "eslint": "^9.39.4",
     "eslint-plugin-github": "^6.0.0",
     "playwright": "1.60.0",
     "typescript": "^4.7.3",
-    "vitest": "4.1.9"
+    "vitest": "4.1.10"
   }
 }
